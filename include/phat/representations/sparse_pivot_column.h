@@ -19,7 +19,6 @@
 #pragma once
 
 #include <phat/helpers/misc.h>
-#include <phat/representations/abstract_pivot_column.h>
 
 namespace phat {
     class sparse_column {
@@ -37,6 +36,15 @@ namespace phat {
         void init( const index total_size ) {
             data.clear(); 
         }
+	
+	
+	template<typename InputIterator>
+	  void add_col(InputIterator begin, InputIterator end) {
+	  for(InputIterator it=begin;it!=end;it++) {
+	    add_index(*it);
+	  }
+	}
+	
 
         void add_col( const column& col ) {
             for( index idx = 0; idx < (index) col.size(); idx++ )
@@ -75,5 +83,4 @@ namespace phat {
         }
     };
 
-    typedef abstract_pivot_column< sparse_column > sparse_pivot_column;
 }

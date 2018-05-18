@@ -19,7 +19,6 @@
 #pragma once
 
 #include <phat/helpers/misc.h>
-#include <phat/representations/abstract_pivot_column.h>
 
 namespace phat {
     class full_column {
@@ -34,6 +33,15 @@ namespace phat {
             col_bit_field.resize( total_size, false );
             is_in_history.resize( total_size, false );
         }
+
+	
+	template<typename InputIterator>
+	  void add_col(InputIterator begin, InputIterator end) {
+	  for(InputIterator it=begin;it!=end;it++) {
+	    add_index(*it);
+	  }
+	}
+	
 
         void add_col( const column& col ) {
             for( index idx = 0; idx < (index) col.size(); idx++ ) {
@@ -96,5 +104,4 @@ namespace phat {
         }
     };
 
-    typedef abstract_pivot_column< full_column > full_pivot_column;
 }
