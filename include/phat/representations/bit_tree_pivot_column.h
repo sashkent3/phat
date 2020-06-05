@@ -146,7 +146,7 @@ namespace phat {
                 add_index(col[i]);
         }
 
-		void clear() {
+	void clear() {
             index mx = this->get_max_index();
             while( mx != -1 ) {
                 add_index( mx );
@@ -154,7 +154,14 @@ namespace phat {
             }
         }
 
-		void remove_max() {
+	index size() {
+	    // INEFFICIENT!!
+	    column col;
+	    get_col(col);
+	    return col.size();
+	}
+
+	void remove_max() {
             add_index( get_max_index() );
         }
 

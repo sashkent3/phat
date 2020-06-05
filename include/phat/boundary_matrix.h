@@ -76,13 +76,30 @@ namespace phat {
         // clears given column
         void clear( index idx ) { 
 	  rep._clear(idx); }
-        
+
+        // Returns number of non-zero entries of column
+        index size( index idx ) {
+	    return rep._size(idx); }
+
         // finalizes given column
         void finalize( index idx ) { 
 	  rep._finalize(idx); }
         
         // synchronizes all internal data structures -- has to be called before and after any multithreaded access!
         void sync() { rep._sync(); }
+
+        void swap( index idx1, index idx2 ) { rep._swap(idx1, idx2);}
+
+    // Manipulations -- independent of chose `Representation'
+
+        void swap_columns( index idx1, index idx2 ) {
+	  
+	    column col1,col2;
+	    get_col(idx1,col1);
+	    get_col(idx2,col2);
+	    set_col(idx1,col2);
+	    set_col(idx2,col1);
+	}
 
     // info functions -- independent of chosen 'Representation'
     public:

@@ -100,6 +100,15 @@ class Uniform_representation {
   void _clear( index idx ) { 
     col_traits.col_at(matrix, idx)._clear(); 
   }
+
+  index _size( index idx ) { 
+    return col_traits.col_at(matrix, idx)._size(); 
+  }
+
+  void _swap( index idx1, index idx2 ) {
+    col_traits.swap(matrix,idx1,idx2);
+    dim_traits.swap(dims,idx1,idx2);
+  }
         
   void _finalize( index idx ) { 
     col_traits.col_at(matrix, idx)._finalize(); 

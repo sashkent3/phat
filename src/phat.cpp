@@ -22,6 +22,8 @@
 
 #include <phat/algorithms/twist_reduction.h>
 #include <phat/algorithms/standard_reduction.h>
+#include <phat/algorithms/swap_reduction.h>
+#include <phat/algorithms/swap_twist_reduction.h>
 #include <phat/algorithms/row_reduction.h>
 #include <phat/algorithms/chunk_reduction.h>
 #include <phat/algorithms/spectral_sequence_reduction.h>
@@ -29,7 +31,7 @@
 #include <phat/helpers/dualize.h>
 
 enum Representation_type { VECTOR_VECTOR, VECTOR_HEAP, VECTOR_SET, SPARSE_PIVOT_COLUMN, FULL_PIVOT_COLUMN, BIT_TREE_PIVOT_COLUMN, VECTOR_LIST, HEAP_PIVOT_COLUMN };
-enum Algorithm_type  {STANDARD, TWIST, ROW, CHUNK, CHUNK_SEQUENTIAL, SPECTRAL_SEQUENCE };
+enum Algorithm_type  {STANDARD, TWIST, SWAP, SWAP_TWIST, ROW, CHUNK, CHUNK_SEQUENTIAL, SPECTRAL_SEQUENCE };
 
 void print_help() {
     std::cerr << "Usage: " << "phat " << "[options] input_filename output_filename" << std::endl;
@@ -42,7 +44,7 @@ void print_help() {
     std::cerr << "--verbose --  verbose output" << std::endl;
     std::cerr << "--dualize   --  use dualization approach" << std::endl;
     std::cerr << "--vector_vector, --vector_heap, --vector_set, --vector_list, --full_pivot_column, --sparse_pivot_column, --heap_pivot_column, --bit_tree_pivot_column  --  selects a representation data structure for boundary matrices (default is '--bit_tree_pivot_column')" << std::endl;
-    std::cerr << "--standard, --twist, --chunk, --chunk_sequential, --spectral_sequence, --row  --  selects a reduction algorithm (default is '--twist')" << std::endl;
+    std::cerr << "--standard, --twist, --swap, --swap_twist, --chunk, --chunk_sequential, --spectral_sequence, --row  --  selects a reduction algorithm (default is '--twist')" << std::endl;
 }
 
 void print_help_and_exit() {
@@ -74,6 +76,8 @@ void parse_command_line( int argc, char** argv, bool& use_binary, Representation
         else if( option == "--heap_pivot_column" ) representation = HEAP_PIVOT_COLUMN;
         else if( option == "--standard" ) algorithm = STANDARD;
         else if( option == "--twist" ) algorithm = TWIST;
+        else if( option == "--swap" ) algorithm = SWAP;
+        else if( option == "--swap_twist" ) algorithm = SWAP_TWIST;
         else if( option == "--row" ) algorithm = ROW;
         else if( option == "--chunk" ) algorithm = CHUNK;
         else if( option == "--chunk_sequential" ) algorithm = CHUNK_SEQUENTIAL;
@@ -148,6 +152,8 @@ void compute_pairing( std::string input_filename, std::string output_filename, b
     switch( algorithm ) { \
     case STANDARD: compute_pairing< phat::Representation, phat::standard_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
     case TWIST: compute_pairing< phat::Representation, phat::twist_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
+    case SWAP: compute_pairing< phat::Representation, phat::swap_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
+    case SWAP_TWIST: compute_pairing< phat::Representation, phat::swap_twist_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
     case ROW: compute_pairing< phat::Representation, phat::row_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
     case SPECTRAL_SEQUENCE: compute_pairing< phat::Representation, phat::spectral_sequence_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
     case CHUNK: compute_pairing< phat::Representation, phat::chunk_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \

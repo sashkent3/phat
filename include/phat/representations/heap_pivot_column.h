@@ -114,11 +114,16 @@ namespace phat {
             return get_max_index() == -1;
         }
 
-		void clear() {
-            data = std::priority_queue< index >();
-		}
+	void clear() {
+	    data = std::priority_queue< index >();
+	}
 
-		void remove_max() {
+	index size() {
+	    prune();
+	    return data.size();
+	}
+
+	void remove_max() {
             pop_max_index();
         }
 

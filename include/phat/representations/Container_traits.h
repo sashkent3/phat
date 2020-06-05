@@ -44,6 +44,10 @@ template<typename ColumnContainer>
     data.resize(nr_of_columns);
   }
 
+  void swap(Column_container& data, index idx1, index idx2) const {
+    std::swap(data[idx1],data[idx2]);
+  }
+
 };
 
 template<typename DimensionContainer>
@@ -67,6 +71,10 @@ template<typename DimensionContainer>
 
   void resize(Dimension_container& data, index nr_of_columns) const { 
     data.resize(nr_of_columns);
+  }
+
+  void swap(Dimension_container& data, index idx1, index idx2) const {
+    std::swap(data[idx1],data[idx2]);
   }
 
 };

@@ -64,12 +64,16 @@ namespace phat {
             return data.empty();
         }
 
-		void clear() {
-			data.clear();
-		}
+	void clear() {
+	    data.clear();
+	}
+	
+	index size() {
+   	    return static_cast<index>(data.size());
+	}
 
-		void remove_max() {
-            add_index( get_max_index() );
+	void remove_max() {
+	    add_index( get_max_index() );
         }
 
         void set_col( const column& col  ) {

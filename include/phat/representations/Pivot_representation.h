@@ -109,7 +109,16 @@ template<typename BaseRepresentation, typename PivotColumn>
   void _set_col( index idx, const column& col  ) { is_pivot_col( idx ) ? get_pivot_col().set_col( col ) : Base::_set_col( idx, col ); }
 
   void _remove_max( index idx ) { is_pivot_col( idx ) ? get_pivot_col().remove_max() : Base::_remove_max( idx ); }
-        
+
+  index _size( index idx) { is_pivot_col( idx ) ? get_pivot_col().size() : Base::_size( idx ); }
+
+  void _swap(index idx1, index idx2 ) {
+    if ( is_pivot_col( idx1 ) || is_pivot_col( idx2 ) ) {
+      release_pivot_col();
+    }
+    Base::_swap(idx1,idx2);
+  }
+           
   void finalize( index idx ) { Base::_finalize( idx ); }
 
 };
