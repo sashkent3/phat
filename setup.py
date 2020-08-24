@@ -51,7 +51,7 @@ if sys.version_info < (3,4,0):
 
 setup(
     name='phat',
-    version='1.5.0.post2',
+    version='1.6.0.post2',
     author='Bryn Keller',
     author_email='bryn.keller@intel.com',
     url='https://bitbucket.org/phat-code/phat',
