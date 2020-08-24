@@ -12,15 +12,7 @@
 #include "phat/persistence_pairs.h"
 #include "phat/compute_persistence_pairs.h"
 #include "phat/boundary_matrix.h"
-#include "phat/representations/abstract_pivot_column.h"
-#include <phat/representations/vector_vector.h>
-#include <phat/representations/vector_heap.h>
-#include <phat/representations/vector_set.h>
-#include <phat/representations/vector_list.h>
-#include <phat/representations/sparse_pivot_column.h>
-#include <phat/representations/heap_pivot_column.h>
-#include <phat/representations/full_pivot_column.h>
-#include <phat/representations/bit_tree_pivot_column.h>
+#include "phat/representations/default_representations.h"
 #include <phat/algorithms/twist_reduction.h>
 #include <phat/algorithms/standard_reduction.h>
 #include <phat/algorithms/row_reduction.h>
