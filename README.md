@@ -10,6 +10,7 @@ Ulrich Bauer, Michael Kerber, Jan Reininghaus
 Hubert Wagner, Bryn Keller
 
 ## Downloads ##
+* [PHAT, v1.6](https://bitbucket.org/phat-code/phat/get/v1.6.zip)
 * [PHAT, v1.5](https://bitbucket.org/phat-code/phat/get/v1.5.zip)
 * [PHAT, v1.4.1](https://bitbucket.org/phat-code/phat/get/v1.4.1.zip)
 * [PHAT, v1.3](https://drive.google.com/uc?id=0B7Yz6TPEpiGEMGFNQ3FPX3ltelk&export=download)
