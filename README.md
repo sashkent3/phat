@@ -1,5 +1,5 @@
 # PHAT (Persistent Homology Algorithm Toolbox), v1.6 #
-Copyright 2013–2017 IST Austria
+Copyright 2013–2020 IST Austria
 
 ## Project Founders ##
 
