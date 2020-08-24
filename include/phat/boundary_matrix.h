@@ -37,8 +37,14 @@ namespace phat {
         // get overall number of columns in boundary_matrix
         index get_num_cols() const { return rep._get_num_cols(); }
 
+        // sets the number of rows (1st parameter) and columns (2nd parameter)
+        // of the matrix. Most internal types ignore the number of rows
+        // but some do no
+        void set_dimensions( index nr_of_rows, index nr_of_columns ) {rep._set_dimensions( nr_of_rows, nr_of_columns );}
+
         // set overall number of columns in boundary_matrix
-        void set_num_cols( index nr_of_columns ) { rep._set_num_cols( nr_of_columns ); }
+        // sets the number of rows to nr_of_columns as well!
+        void set_num_cols( index nr_of_columns ) { rep._set_dimensions( nr_of_columns, nr_of_columns ); }
 
         // get dimension of given index
         dimension get_dim( index idx ) const { return rep._get_dim( idx ); }

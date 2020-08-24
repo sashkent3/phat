@@ -71,13 +71,13 @@ template<typename BaseRepresentation, typename PivotColumn>
   
  public:  
 
-  void _set_num_cols( index nr_of_cols ) {
+  void _set_dimensions( index nr_of_rows, index nr_of_cols ) {
     #pragma omp parallel for
     for( int tid = 0; tid < omp_get_num_threads(); tid++ ) {
-      pivot_cols[ tid ].init( nr_of_cols );
+      pivot_cols[ tid ].init( nr_of_rows );
       idx_of_pivot_cols[ tid ] = -1;
     }
-    Base::_set_num_cols( nr_of_cols );
+    Base::_set_dimensions( nr_of_rows, nr_of_cols );
   }
 
   void _add_to( index source, index target ) {

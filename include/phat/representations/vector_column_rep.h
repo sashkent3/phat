@@ -54,6 +54,10 @@ namespace phat {
             indices = col; 
         }
 
+	void _set_nr_of_rows( int nr_of_rows ) {
+	  // ignore
+	}
+
         // true iff boundary of given idx is empty
         bool _is_empty() const { 
             return indices.empty(); 

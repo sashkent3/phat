@@ -54,9 +54,10 @@ class Uniform_representation {
     return col_traits.get_size(matrix);
   }
   
-  void _set_num_cols(index nr_of_columns) {
+  void _set_dimensions(index nr_of_rows, index nr_of_columns) {
     col_traits.resize(matrix, nr_of_columns);
     for(index idx = 0;idx < nr_of_columns;idx++) {
+      col_traits.col_at(matrix,idx)._set_nr_of_rows(nr_of_rows);
       col_traits.col_at(matrix,idx).offer_thread_local_storage(&temp_column_buffer);
     }
     dim_traits.resize(dims, nr_of_columns);

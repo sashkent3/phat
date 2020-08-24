@@ -104,6 +104,10 @@ namespace phat {
             std::make_heap( indices.begin( ), indices.end( ) );
         }
 
+	void _set_nr_of_rows( int nr_of_rows ) {
+	  // ignore
+	}
+
         // true iff boundary of given idx is empty
         bool _is_empty() const
         {
