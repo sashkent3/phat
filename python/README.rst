@@ -97,41 +97,42 @@ We will build an ordered boundary matrix of this simplicial complex consisting o
 
 Now the code::
 
-    import phat
+import phat
 
-    boundary_matrix = phat.boundary_matrix()
+boundary_matrix = phat.boundary_matrix()
 
-    # or define a boundary matrix with the chosen internal representation
-    # boundary_matrix = phat.boundary_matrix(representation = phat.representations.bit_tree_pivot_column)
+# or define a boundary matrix with the chosen internal representation
+# boundary_matrix = phat.boundary_matrix(representation = phat.representations.bit_tree_pivot_column)
 
-    # set the respective columns -- (dimension, boundary) pairs
-    boundary_matrix.columns = [ (0, []),
-                                (0, []),
-                                (1, [0,1]),
-                                (0, []),
-                                (1, [1,3]),
-                                (1, [0,3]),
-                                (2, [2,4,5])]
+# set the respective columns -- (dimension, boundary) pairs
+boundary_matrix.columns = [ (0, []),
+                            (0, []),
+                            (1, [0,1]),
+                            (0, []),
+                            (1, [1,3]),
+                            (1, [0,3]),
+                            (2, [2,4,5])]
 
-    # or equivalently, boundary_matrix = phat.boundary_matrix(representation = ..., columns = ...)
-    # would combine the creation of the matrix and the assignment of the columns
+# or equivalently, boundary_matrix = phat.boundary_matrix(representation = ..., columns = ...)
+# would combine the creation of the matrix and the assignment of the columns
 
-    # print some information of the boundary matrix:
-    print("\nThe boundary matrix has %d columns:" % len(boundary_matrix.columns))
-    for col in boundary_matrix.columns:
-        s = "Column %d represents a cell of dimension %d." % (col.index, col.dimension)
-        if (col.boundary):
-            s = s + " Its boundary consists of the cells " + " ".join([str(c) for c in col.boundary])
-        print(s)
-    print("Overall, the boundary matrix has %d entries." % len(boundary_matrix))
+# print some information of the boundary matrix:
+print("\nThe boundary matrix has %d columns:" % len(boundary_matrix.columns))
+for col in boundary_matrix.columns:
+    s = "Column %d represents a cell of dimension %d." % (col.index, col.dimension)
+    if (col.boundary):
+        s = s + " Its boundary consists of the cells " + " ".join([str(c) for c in col.boundary])
+    print(s)
 
-    pairs = boundary_matrix.compute_persistence_pairs()
+print("Overall, the boundary matrix has %d entries." % len(boundary_matrix))
 
-    pairs.sort()
+pairs = boundary_matrix.compute_persistence_pairs()
 
-    print("\nThere are %d persistence pairs: " % len(pairs))
-    for pair in pairs:
-        print("Birth: %d, Death: %d" % pair)
+pairs.sort()
+
+print("\nThere are %d persistence pairs: " % len(pairs))
+for pair in pairs:
+    print("Birth: %d, Death: %d" % pair)
 
 References:
 
@@ -140,5 +141,5 @@ References:
 .. [3] C.Chen, M.Kerber: Persistent Homology Computation With a Twist. 27th European Workshop on Computational Geometry, 2011.
 .. [4] U.Bauer, M.Kerber, J.Reininghaus: Clear and Compress: Computing Persistent Homology in Chunks. arXiv:1303.0477_
 .. _arXiv:1303.0477: http://arxiv.org/pdf/1303.0477.pdf
-.. _`Persistent Homology Algorithm Toolkit`: https://bitbucket.org/phat/phat-code
+.. _`Persistent Homology Algorithm Toolbox`: https://bitbucket.org/phat/phat-code
 .. _`python.org`:http://docs.python-guide.org/en/latest/starting/install/osx/
