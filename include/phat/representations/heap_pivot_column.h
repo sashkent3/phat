@@ -19,7 +19,6 @@
 #pragma once
 
 #include <phat/helpers/misc.h>
-#include <phat/representations/abstract_pivot_column.h>
 
 namespace phat {
     class heap_column {
@@ -71,6 +70,18 @@ namespace phat {
             clear();
         }
 
+	
+	template<typename InputIterator>
+	  void add_col(InputIterator begin, InputIterator end) {
+	  for(InputIterator it=begin;it!=end;it++) {
+	    data.push(*it);
+	    inserts_since_last_prune++;
+	  }
+	  if( 2 * inserts_since_last_prune >( index ) data.size( ) )
+	    prune();
+	}
+	
+	
         void add_col( const column& col ) {
             for( index idx = 0; idx < (index) col.size(); idx++ )
                 data.push( col[ idx ] );
@@ -122,5 +133,4 @@ namespace phat {
         }
     };
 
-    typedef abstract_pivot_column< heap_column > heap_pivot_column;
 }

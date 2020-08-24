@@ -19,12 +19,14 @@
 #pragma once
 
 #include <phat/helpers/misc.h>
-#include <phat/representations/bit_tree_pivot_column.h>
+#include <phat/representations/default_representations.h>
+
+namespace phat {
 
 // interface class for the main data structure -- implementations of the interface can be found in ./representations
-namespace phat {
-    template< class Representation = bit_tree_pivot_column >
-    class boundary_matrix
+
+ template< class Representation = bit_tree_pivot_column >
+   class boundary_matrix
     {
         
     protected:
@@ -45,28 +47,39 @@ namespace phat {
         void set_dim( index idx, dimension dim ) { rep._set_dim( idx, dim ); }
 
         // replaces content of @col with boundary of given index
-        void get_col( index idx, column& col  ) const { col.clear(); rep._get_col( idx, col ); }
+        void get_col( index idx, column& col  ) const { 
+	  rep._get_col( idx, col ); 
+	}
 
         // set column @idx to the values contained in @col
-        void set_col( index idx, const column& col  ) { rep._set_col( idx, col ); }
+        void set_col( index idx, const column& col  ) { 
+	  rep._set_col( idx, col ); }
 
         // true iff boundary of given column is empty
-        bool is_empty( index idx ) const { return rep._is_empty( idx ); }
+        bool is_empty( index idx ) const { 
+	  return rep._is_empty(idx); 
+	}
 
         // largest index of given column (new name for lowestOne()) -- NOT thread-safe
-        index get_max_index( index idx ) const { return rep._get_max_index( idx ); }
+        index get_max_index( index idx ) const { 
+	  return rep._get_max_index(idx); }
 
         // removes maximal index from given column 
-        void remove_max( index idx ) { rep._remove_max( idx ); }
+        void remove_max( index idx ) { 
+	  return rep._remove_max( idx ); 
+	}
 
         // adds column @source to column @target'
-        void add_to( index source, index target ) { rep._add_to( source, target ); }
+        void add_to( index source, index target ) { 
+	  rep._add_to( source, target ); }
 
         // clears given column
-        void clear( index idx ) { rep._clear( idx ); }
+        void clear( index idx ) { 
+	  rep._clear(idx); }
         
         // finalizes given column
-        void finalize( index idx ) { rep._finalize( idx ); }
+        void finalize( index idx ) { 
+	  rep._finalize(idx); }
         
         // synchronizes all internal data structures -- has to be called before and after any multithreaded access!
         void sync() { rep._sync(); }
@@ -131,6 +144,10 @@ namespace phat {
             *this = other;
         }
 
+        boundary_matrix( const boundary_matrix<Representation>& other) {
+	  *this = other;
+	}
+
         template< typename OtherRepresentation >
         bool operator==( const boundary_matrix< OtherRepresentation >& other_boundary_matrix ) const {
             const index number_of_columns = this->get_num_cols();
@@ -154,20 +171,30 @@ namespace phat {
             return !( *this == other_boundary_matrix );
         }
 
+
+        template< typename OtherRepresentation >
+        boundary_matrix< Representation >& assign(const boundary_matrix< OtherRepresentation >& other) {
+	  const index nr_of_columns = other.get_num_cols();
+	  this->set_num_cols( nr_of_columns );
+	  column temp_col;
+	  for( index cur_col = 0; cur_col <  nr_of_columns; cur_col++ ) {
+	    this->set_dim( cur_col, other.get_dim( cur_col ) );
+	    other.get_col( cur_col, temp_col );
+	    this->set_col( cur_col, temp_col );
+	  }
+	  // by convention, always return *this
+	  return *this;
+	}
+
+        boundary_matrix< Representation >& operator=( const boundary_matrix< Representation >& other )
+        {
+	  return assign(other);
+        }
+
         template< typename OtherRepresentation >
         boundary_matrix< Representation >& operator=( const boundary_matrix< OtherRepresentation >& other )
         {
-            const index nr_of_columns = other.get_num_cols();
-            this->set_num_cols( nr_of_columns );
-            column temp_col;
-            for( index cur_col = 0; cur_col <  nr_of_columns; cur_col++ ) {
-                this->set_dim( cur_col, other.get_dim( cur_col ) );
-                other.get_col( cur_col, temp_col );
-                this->set_col( cur_col, temp_col );
-            }
-
-            // by convention, always return *this
-            return *this;
+	  return assign(other);
         }
 
     // I/O -- independent of chosen 'Representation'
@@ -181,6 +208,7 @@ namespace phat {
             column temp_col;
             #pragma omp parallel for private( temp_col )
             for( index cur_col = 0; cur_col <  nr_of_columns; cur_col++ ) {
+	      //std::cout << "At index " << cur_col  << " of " << nr_of_columns << " " << omp_get_thread_num() << std::endl;
                 this->set_dim( cur_col, (dimension)input_dims[ cur_col ] );
                 
                 index num_rows = input_matrix[ cur_col ].size();

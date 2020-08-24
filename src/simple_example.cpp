@@ -22,7 +22,7 @@
 #include <phat/compute_persistence_pairs.h>
 
 // main data structure (choice affects performance)
-#include <phat/representations/vector_vector.h>
+#include <phat/representations/default_representations.h>
 
 // algorithm (choice affects performance)
 #include <phat/algorithms/standard_reduction.h>

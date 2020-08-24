@@ -21,72 +21,68 @@
 #include <phat/helpers/misc.h>
 
 namespace phat {
-    class vector_list {
+    class list_column_rep {
 
     protected:
-        std::vector< dimension > dims;
-        std::vector< std::list< index > > matrix;
+      std::list< index > indices;
 
     public:
-        // overall number of cells in boundary_matrix
-        index _get_num_cols() const {
-            return (index)matrix.size(); 
-        }
-        void _set_num_cols( index nr_of_columns ) {
-            dims.resize( nr_of_columns );
-            matrix.resize( nr_of_columns );
-        }
 
-         // dimension of given index
-        dimension _get_dim( index idx ) const { 
-            return dims[ idx ]; 
-        }
-        void _set_dim( index idx, dimension dim ) { 
-            dims[ idx ] = dim; 
-        }
+        typedef list_column_rep Self;
+      
+	std::list<index>::const_iterator begin() const {
+	  return indices.begin();
+	}
+
+	std::list<index>::const_iterator end() const {
+	  return indices.end();
+	}
+
+	void offer_thread_local_storage(thread_local_storage< column >* tls) {
+	}
 
         // replaces(!) content of 'col' with boundary of given index
-        void _get_col( index idx, column& col  ) const {
+        void _get_col( column& col  ) const {
             col.clear();
-            col.reserve( matrix[idx].size() );
-            std::copy (matrix[idx].begin(), matrix[idx].end(), std::back_inserter(col) );
+            col.reserve( indices.size() );
+            std::copy (indices.begin(), indices.end(), std::back_inserter(col) );
         }
 
-        void _set_col( index idx, const column& col  ) {
-            matrix[ idx ].clear();
-            matrix[ idx ].resize( col.size() );
-            std::copy (col.begin(), col.end(), matrix[ idx ].begin() );
+        void _set_col( const column& col  ) {
+            indices.clear();
+            indices.resize( col.size() );
+            std::copy (col.begin(), col.end(), indices.begin() );
         }
 
         // true iff boundary of given idx is empty
-        bool _is_empty( index idx ) const {
-            return matrix[ idx ].empty();    
+        bool _is_empty() const {
+            return indices.empty();    
         }
 
         // largest row index of given column idx (new name for lowestOne())
-        index _get_max_index( index idx ) const {
-            return matrix[ idx ].empty() ? -1 : *matrix[ idx ].rbegin();
+        index _get_max_index() const {
+            return indices.empty() ? -1 : *indices.rbegin();
         }
 
         // removes the maximal index of a column
-        void _remove_max( index idx ) {
-            std::list< index >::iterator it = matrix[ idx ].end();
+        void _remove_max() {
+            std::list< index >::iterator it = indices.end();
             it--;
-            matrix[ idx ].erase( it );
+            indices.erase( it );
         }
         
         // clears given column
-        void _clear( index idx ) {
-            matrix[ idx ].clear();    
+        void _clear() {
+            indices.clear();    
         }
 
         // syncronizes all data structures (essential for openmp stuff)
         void _sync() {}
 
         // adds column 'source' to column 'target'
-        void _add_to( index source, index target ) {
-            std::list< index >& source_col = matrix[ source ];
-            std::list< index >& target_col = matrix[ target ];
+        void _add_to( Self& source) {
+            std::list< index >& source_col = source.indices;
+            std::list< index >& target_col = this->indices;
             std::list< index > temp_col;
             target_col.swap( temp_col );
             std::set_symmetric_difference( temp_col.begin(), temp_col.end(),
@@ -95,7 +91,7 @@ namespace phat {
         }
         
         // finalizes given column
-        void _finalize( index idx ) {
+        void _finalize() {
         }
     };
 }

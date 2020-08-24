@@ -19,7 +19,6 @@
 #pragma once
 
 #include <phat/helpers/misc.h>
-#include <phat/representations/abstract_pivot_column.h>
 
 namespace phat {
 
@@ -133,6 +132,15 @@ namespace phat {
             std::reverse( out.begin(), out.end() );
         }
 
+	
+	template<typename InputIterator>
+	  void add_col(InputIterator begin, InputIterator end) {
+	  for(InputIterator it=begin;it!=end;it++) {
+	    add_index(*it);
+	  }
+	}
+	
+
         void add_col(const column &col) {
             for( size_t i = 0; i < col.size(); ++i )
                 add_index(col[i]);
@@ -161,5 +169,4 @@ namespace phat {
         }
     };
 
-    typedef abstract_pivot_column<bit_tree_column> bit_tree_pivot_column;
 }
