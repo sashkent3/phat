@@ -265,7 +265,8 @@ int main( int argc, char** argv )
         }
 
         if( error ) return EXIT_FAILURE;
-        else std::cout << "Test passed!" << std::endl;
+	else std::cout << "All results are identical (as they should be)" << std::endl;
+       
     }
 
     { // Test of Unordered_map representation (requires c++11)
@@ -286,7 +287,7 @@ int main( int argc, char** argv )
         }
 
         if( error ) return EXIT_FAILURE;
-        else std::cout << "All results are identical (as they should be)" << std::endl;
+	else std::cout << "Test passed!" << std::endl;        
     }
     
     return EXIT_SUCCESS;
