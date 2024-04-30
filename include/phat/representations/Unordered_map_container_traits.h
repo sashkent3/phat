@@ -71,6 +71,10 @@ template<class ColumnType>
     _size = nr_of_columns;
   }
 
+  void swap(Column_container& data, index idx1, index idx2) const {
+    std::swap(data[idx1],data[idx2]);
+  }
+    
  };
 
 template<>
@@ -115,6 +119,10 @@ template<>
     _size = nr_of_columns;
   }
 
+  void swap(Dimension_container& data, index idx1, index idx2) const {
+    std::swap(data[idx1],data[idx2]);
+  }
+    
  };
 
 } // of namespace phat

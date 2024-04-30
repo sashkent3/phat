@@ -19,6 +19,7 @@
 #include <phat/compute_persistence_pairs.h>
 
 #include <phat/representations/default_representations.h>
+#include <phat/representations/Unordered_map_container_traits.h>
 
 #include <phat/algorithms/twist_reduction.h>
 #include <phat/algorithms/standard_reduction.h>
@@ -267,5 +268,26 @@ int main( int argc, char** argv )
         else std::cout << "Test passed!" << std::endl;
     }
 
+    { // Test of Unordered_map representation (requires c++11)
+	std::cout << "Test of unordered map" << std::endl;
+	typedef phat::Uniform_representation< std::unordered_map<phat::index, phat::vector_column_rep>, std::unordered_map<phat::index,phat::index> > hashtable_vector;
+
+	phat::persistence_pairs hash_pairs;
+	phat::boundary_matrix<hashtable_vector> hash_boundary_matrix(boundary_matrix);
+	phat::compute_persistence_pairs< phat::swap_twist_reduction >( hash_pairs, hash_boundary_matrix );
+
+        phat::persistence_pairs vec_pairs;
+        phat::boundary_matrix< Vec_vec > vec_boundary_matrix(boundary_matrix);
+        phat::compute_persistence_pairs_dualized< phat::swap_twist_reduction >( vec_pairs, vec_boundary_matrix );
+
+        if( hash_pairs != vec_pairs ) {
+            std::cerr << "Error: hash and vec differ!" << std::endl;
+            error = true;
+        }
+
+        if( error ) return EXIT_FAILURE;
+        else std::cout << "All results are identical (as they should be)" << std::endl;
+    }
+    
     return EXIT_SUCCESS;
 }
