@@ -20,56 +20,63 @@
 
 namespace phat {
   
-template<typename ColumnContainer>
-  class Column_container_traits {
- 
-  public:  
+    template<typename ColumnContainer>
+    class Column_container_traits {
+	
+    public:  
+	
+	typedef ColumnContainer Column_container;
+	typedef typename Column_container::value_type Column_type;
+	
+	Column_type& col_at(Column_container& data, index idx) const {
+	    return data[ idx ];
+	}
+	
+	const Column_type& col_at(const Column_container& data, index idx) const {
+	    return data[ idx ];
+	}
+	
+	index get_size(const Column_container& data) const {
+	    return data.size();
+	}
+	
+	void resize(Column_container& data, index nr_of_columns) const {
+	    data.resize(nr_of_columns);
+	}
+	
+	void swap(Column_container& data, index idx1, index idx2) const {
+	    std::swap(data[idx1],data[idx2]);
+	}
+	
+    };
+    
+    template<typename DimensionContainer>
+    class Dimension_container_traits {
+	
+    public:
+	
+	typedef DimensionContainer Dimension_container;
+	
+	index& dim_at(Dimension_container& data, index idx) const {
+	    return data[ idx ];
+	}
+	
+	const index& dim_at(const Dimension_container& data, index idx) const {
+	    return data[ idx ];
+	}
+	
+	index get_size(const Dimension_container& data) const {
+	    return data.size();
+	}
+	
+	void resize(Dimension_container& data, index nr_of_columns) const { 
+	    data.resize(nr_of_columns);
+	}
 
-  typedef ColumnContainer Column_container;
-  typedef typename Column_container::value_type Column_type;
-
-  Column_type& col_at(Column_container& data, index idx) const {
-    return data[ idx ];
-  }
-
-  const Column_type& col_at(const Column_container& data, index idx) const {
-    return data[ idx ];
-  }
-
-  index get_size(const Column_container& data) const {
-    return data.size();
-  }
-
-  void resize(Column_container& data, index nr_of_columns) const {
-    data.resize(nr_of_columns);
-  }
-
-};
-
-template<typename DimensionContainer>
-  class Dimension_container_traits {
-  
-  public:
-
-  typedef DimensionContainer Dimension_container;
-
-  index& dim_at(Dimension_container& data, index idx) const {
-    return data[ idx ];
-  }
-
-  const index& dim_at(const Dimension_container& data, index idx) const {
-    return data[ idx ];
-  }
-
-  index get_size(const Dimension_container& data) const {
-    return data.size();
-  }
-
-  void resize(Dimension_container& data, index nr_of_columns) const { 
-    data.resize(nr_of_columns);
-  }
-
-};
-
-
+	void swap(Dimension_container& data, index idx1, index idx2) const {
+	    std::swap(data[idx1],data[idx2]);
+	}
+	
+    };
+    
 } // namespace phat

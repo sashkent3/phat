@@ -28,10 +28,13 @@ namespace phat {
         std::vector< char > is_in_history;
         std::vector< char > col_bit_field;
 
+	index size_of_column;
+
     public:
         void init( const index total_size ) {
             col_bit_field.resize( total_size, false );
             is_in_history.resize( total_size, false );
+	    size_of_column=0;
         }
 
 	
@@ -56,6 +59,11 @@ namespace phat {
             }
 
             col_bit_field[ idx ] = !col_bit_field[ idx ];
+	    if(col_bit_field[ idx ]) {
+	      size_of_column++;
+	    } else {
+	      size_of_column--;
+	    }
         }
 
         index get_max_index() {
@@ -73,6 +81,7 @@ namespace phat {
         }
 
         void get_col_and_clear( column& col ) {
+	    col.clear();
             while( !is_empty() ) {
                 col.push_back( get_max_index() );
                 add_index( get_max_index() );
@@ -84,12 +93,12 @@ namespace phat {
             return (get_max_index() == -1);   
         }
 
-		void clear() {
-			while( !is_empty() )
-				add_index( get_max_index() );
-		}
-
-		void remove_max() {
+	void clear() {
+	  while( !is_empty() )
+	    add_index( get_max_index() );
+	}
+	
+	void remove_max() {
             add_index( get_max_index() );
         }
 
@@ -102,6 +111,10 @@ namespace phat {
             get_col_and_clear( col );
             add_col( col );
         }
+	
+	index size() {
+	  return size_of_column;
+	}
     };
 
 }

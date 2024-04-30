@@ -21,93 +21,101 @@
 #include <phat/representations/Container_traits.h>
 
 namespace phat {
-  
-template<class ColumnContainer, class DimensionContainer>
-class Uniform_representation {
-  
- public:
-
-  typedef ColumnContainer Column_container;
-  typedef DimensionContainer Dimension_container;
-
-  typedef Column_container_traits<Column_container> Column_traits;
-  typedef Dimension_container_traits<Dimension_container> Dimension_traits;
-
-
-  typedef typename Column_traits::Column_type Column_type;
-
- protected:
-
-  // We need to label them mutable, since we have no control whether
-  // the representations are manipulated by the traits class
-  mutable Dimension_container dims;
-  mutable Column_container matrix;
-
-  Column_traits col_traits;
-  Dimension_traits dim_traits;
-
-  thread_local_storage< column > temp_column_buffer;
-
- public:
-  
-  index _get_num_cols() const {
-    return col_traits.get_size(matrix);
-  }
-  
-  void _set_dimensions(index nr_of_rows, index nr_of_columns) {
-    col_traits.resize(matrix, nr_of_columns);
-    for(index idx = 0;idx < nr_of_columns;idx++) {
-      col_traits.col_at(matrix,idx)._set_nr_of_rows(nr_of_rows);
-      col_traits.col_at(matrix,idx).offer_thread_local_storage(&temp_column_buffer);
-    }
-    dim_traits.resize(dims, nr_of_columns);
-  }
-
-  dimension _get_dim( index idx ) const {
-    return dim_traits.dim_at(dims, idx );
-  }
-
-  void _set_dim( index idx, dimension dim ) { 
-    dim_traits.dim_at(dims,idx) = dim; 
-  }
-
-  void _get_col( index idx, column& col  ) const { 
-    col_traits.col_at(matrix, idx)._get_col( col ); 
-  }
-
-  void _set_col( index idx, const column& col  ) { 
-    //col_traits.col_at(matrix, idx)._set_col( col );
-    matrix[idx]._set_col(col);
-  }
-  
-  bool _is_empty( index idx ) const {
-    return col_traits.col_at(matrix, idx)._is_empty();
-  }
-
-  index _get_max_index( index idx ) const { 
-    return col_traits.col_at(matrix, idx)._get_max_index(); 
-  }
-
-  void _remove_max( index idx ) { 
-    return col_traits.col_at(matrix, idx)._remove_max(); 
-  }
-
-  void _add_to( index source, index target ) { 
-    Column_type& source_col = col_traits.col_at(matrix, source);
-    Column_type& target_col = col_traits.col_at(matrix, target);
-    target_col._add_to( source_col ); 
-  }
-
-  void _clear( index idx ) { 
-    col_traits.col_at(matrix, idx)._clear(); 
-  }
+    
+    template<class ColumnContainer, class DimensionContainer>
+    class Uniform_representation {
+	
+    public:
+	
+	typedef ColumnContainer Column_container;
+	typedef DimensionContainer Dimension_container;
+	
+	typedef Column_container_traits<Column_container> Column_traits;
+	typedef Dimension_container_traits<Dimension_container> Dimension_traits;
+	
+	typedef typename Column_traits::Column_type Column_type;
+	
+    protected:
+	
+	// We need to label them mutable, since we have no control whether
+	// the representations are manipulated by the traits class
+	mutable Dimension_container dims;
+	mutable Column_container matrix;
+	
+	Column_traits col_traits;
+	Dimension_traits dim_traits;
+	
+	thread_local_storage< column > temp_column_buffer;
+	
+    public:
+	
+	index _get_num_cols() const {
+	    return col_traits.get_size(matrix);
+	}
+	
+	void _set_dimensions(index nr_of_rows, index nr_of_columns) {
+	    col_traits.resize(matrix, nr_of_columns);
+	    for(index idx = 0;idx < nr_of_columns;idx++) {
+		col_traits.col_at(matrix,idx)._set_nr_of_rows(nr_of_rows);
+		col_traits.col_at(matrix,idx).offer_thread_local_storage(&temp_column_buffer);
+	    }
+	    dim_traits.resize(dims, nr_of_columns);
+	}
+	
+	dimension _get_dim( index idx ) const {
+	    return dim_traits.dim_at(dims, idx );
+	}
+	
+	void _set_dim( index idx, dimension dim ) { 
+	    dim_traits.dim_at(dims,idx) = dim; 
+	}
+	
+	void _get_col( index idx, column& col  ) const { 
+	    col_traits.col_at(matrix, idx)._get_col( col ); 
+	}
+	
+	void _set_col( index idx, const column& col  ) { 
+	    //col_traits.col_at(matrix, idx)._set_col( col );
+	    matrix[idx]._set_col(col);
+	}
+	
+	bool _is_empty( index idx ) const {
+	    return col_traits.col_at(matrix, idx)._is_empty();
+	}
+	
+	index _get_max_index( index idx ) const { 
+	    return col_traits.col_at(matrix, idx)._get_max_index(); 
+	}
+	
+	void _remove_max( index idx ) { 
+	    return col_traits.col_at(matrix, idx)._remove_max(); 
+	}
+	
+	void _add_to( index source, index target ) { 
+	    Column_type& source_col = col_traits.col_at(matrix, source);
+	    Column_type& target_col = col_traits.col_at(matrix, target);
+	    target_col._add_to( source_col ); 
+	}
+	
+	void _clear( index idx ) { 
+	    col_traits.col_at(matrix, idx)._clear(); 
+	}
+	
+	index _size( index idx ) { 
+	    return col_traits.col_at(matrix, idx)._size(); 
+	}
+	
+	void _swap( index idx1, index idx2 ) {
+	    col_traits.swap(matrix,idx1,idx2);
+	    dim_traits.swap(dims,idx1,idx2);
+	}
+	
+	void _finalize( index idx ) { 
+	    col_traits.col_at(matrix, idx)._finalize(); 
+	}
         
-  void _finalize( index idx ) { 
-    col_traits.col_at(matrix, idx)._finalize(); 
-  }
-        
-  void _sync() {}
-
-};
- 
+	void _sync() {}
+	
+    };
+    
 }

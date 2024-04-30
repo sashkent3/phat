@@ -41,7 +41,7 @@ namespace phat {
 	template<typename InputIterator>
 	  void add_col(InputIterator begin, InputIterator end) {
 	  for(InputIterator it=begin;it!=end;it++) {
-	    add_index(*it);
+	      add_index(*it);
 	  }
 	}
 	
@@ -64,11 +64,15 @@ namespace phat {
             return data.empty();
         }
 
-		void clear() {
-			data.clear();
-		}
+	void clear() {
+	    data.clear();
+	}
 
-		void remove_max() {
+	index size() {
+   	    return static_cast<index>(data.size());
+	}
+		
+	void remove_max() {
             add_index( get_max_index() );
         }
 

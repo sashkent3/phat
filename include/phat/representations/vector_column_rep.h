@@ -58,6 +58,10 @@ namespace phat {
 	  // ignore
 	}
 
+	index _size() {
+	    return indices.size();
+	}
+	
         // true iff boundary of given idx is empty
         bool _is_empty() const { 
             return indices.empty(); 

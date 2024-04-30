@@ -137,8 +137,17 @@ namespace phat {
         }
 
 	index _size() {
-	    _prune();
+	  if(inserts_since_last_prune==0) {
 	    return indices.size();
+	  }
+	  index count=0;
+	  (*temp_column_buffer)() = indices;
+	  index max_index = _pop_max_index( (*temp_column_buffer)() );
+	  while( max_index != -1 ) {
+	    count++;
+	    max_index = _pop_max_index( (*temp_column_buffer)() );
+	  }
+	  return count;
 	}
 
         // syncronizes all data structures (essential for openmp stuff)

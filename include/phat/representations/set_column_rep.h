@@ -78,6 +78,10 @@ namespace phat {
             indices.clear();    
         }
 
+	index _size() {
+	    return indices.size();
+	}
+
         // syncronizes all data structures (essential for openmp stuff)
         void _sync() {}
 
