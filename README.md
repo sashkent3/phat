@@ -148,6 +148,6 @@ the Python-specific README.rst in the `python` folder of this repository for det
 1. H.Edelsbrunner, J.Harer: Computational Topology, An Introduction. American Mathematical Society, 2010, ISBN 0-8218-4925-5
 2. V.de Silva, D.Morozov, M.Vejdemo-Johansson: Dualities in persistent (co)homology. Inverse Problems 27, 2011
 3. C.Chen, M.Kerber: Persistent Homology Computation With a Twist. 27th European Workshop on Computational Geometry, 2011.
-4. U.Bauer, M.Kerber, J.Reininghaus: Clear and Compress: Computing Persistent Homology in Chunks. Topological Methods in Data Analysis and Visualization III. Available at [http://arxiv.org/pdf/1303.0477.pdf]arXiv:1303.0477
+4. U.Bauer, M.Kerber, J.Reininghaus: Clear and Compress: Computing Persistent Homology in Chunks. Topological Methods in Data Analysis and Visualization III. Available at [http://arxiv.org/pdf/1303.0477.pdf] arXiv:1303.0477
 5. U.Bauer, M.Kerber, J.Reininghaus, H.Wagner: Phat – Persistent Homology Algorithms Toolbox. Journal of Symbolic Computation 78, 2017, p. 76–90.
-6. U.Bauer, T.Bin Masood, B.Giunti, G.Houry, M.Kerber, A.Rathod: Keeping it sparse – Computing Persistent Homology revisited. [https://arxiv.org/abs/2211.09075]arXiv:2211.09075
+6. U.Bauer, T.Bin Masood, B.Giunti, G.Houry, M.Kerber, A.Rathod: Keeping it sparse – Computing Persistent Homology revisited. [https://arxiv.org/abs/2211.09075] arXiv:2211.09075
