@@ -1,38 +1,23 @@
-/*  Copyright 2013 IST Austria
-    Contributed by: Ulrich Bauer, Michael Kerber, Jan Reininghaus
-
-    This file is part of PHAT.
-
-    PHAT is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    PHAT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with PHAT.  If not, see <http://www.gnu.org/licenses/>. */
-
 #include <phat/compute_persistence_pairs.h>
 #include <phat/boundary_matrix.h>
 #include <phat/representations/default_representations.h>
 
 #include <phat/algorithms/twist_reduction.h>
 #include <phat/algorithms/standard_reduction.h>
+#include <phat/algorithms/compress_reduction.h>
+#include <phat/algorithms/swap_twist_reduction.h>
 #include <phat/algorithms/row_reduction.h>
 #include <phat/algorithms/chunk_reduction.h>
 #include <phat/algorithms/spectral_sequence_reduction.h>
-#include <phat/algorithms/swap_twist_reduction.h>
+#include <phat/algorithms/mix_exhaustive_compress_reduction.h>
 #include <phat/algorithms/exhaustive_compress_reduction.h>
 #include <phat/algorithms/lazy_retrospective_reduction.h>
+
 
 #include <phat/helpers/dualize.h>
 
 enum Representation_type { VECTOR_VECTOR, VECTOR_HEAP, VECTOR_SET, SPARSE_PIVOT_COLUMN, FULL_PIVOT_COLUMN, BIT_TREE_PIVOT_COLUMN, VECTOR_LIST, HEAP_PIVOT_COLUMN };
-enum Algorithm_type  {STANDARD, TWIST, ROW, CHUNK, CHUNK_SEQUENTIAL, SPECTRAL_SEQUENCE, SWAP, EXHAUSTIVE, RETROSPECTIVE };
+enum Algorithm_type  {STANDARD, TWIST, SWAP_TWIST, ROW, CHUNK, CHUNK_SEQUENTIAL, SPECTRAL_SEQUENCE, EXHAUSTIVE_COMPRESS, MIX_COMPRESS, RETROSPECTIVE,COMPRESS };
 
 void print_help() {
     std::cerr << "Usage: " << "phat " << "[options] input_filename output_filename" << std::endl;
@@ -45,7 +30,7 @@ void print_help() {
     std::cerr << "--verbose --  verbose output" << std::endl;
     std::cerr << "--dualize   --  use dualization approach" << std::endl;
     std::cerr << "--vector_vector, --vector_heap, --vector_set, --vector_list, --full_pivot_column, --sparse_pivot_column, --heap_pivot_column, --bit_tree_pivot_column  --  selects a representation data structure for boundary matrices (default is '--bit_tree_pivot_column')" << std::endl;
-    std::cerr << "--standard, --twist, --chunk, --chunk_sequential, --spectral_sequence, --row  --swap --exhaustive --retrospective --  selects a reduction algorithm (default is '--twist')" << std::endl;
+    std::cerr << "--standard, --twist, --swap_twist, --chunk, --chunk_sequential, --spectral_sequence, --row, --mix, --exhaustive_compress, --retrospective --compress --  selects a reduction algorithm (default is '--twist')" << std::endl;
 }
 
 void print_help_and_exit() {
@@ -77,13 +62,15 @@ void parse_command_line( int argc, char** argv, bool& use_binary, Representation
         else if( option == "--heap_pivot_column" ) representation = HEAP_PIVOT_COLUMN;
         else if( option == "--standard" ) algorithm = STANDARD;
         else if( option == "--twist" ) algorithm = TWIST;
+        else if( option == "--swap_twist" ) algorithm = SWAP_TWIST;
         else if( option == "--row" ) algorithm = ROW;
+        else if( option == "--mix" ) algorithm = MIX_COMPRESS;
+        else if( option == "--exhaustive_compress" ) algorithm = EXHAUSTIVE_COMPRESS;
+        else if( option == "--retrospective" ) algorithm = RETROSPECTIVE;
         else if( option == "--chunk" ) algorithm = CHUNK;
         else if( option == "--chunk_sequential" ) algorithm = CHUNK_SEQUENTIAL;
         else if( option == "--spectral_sequence" ) algorithm = SPECTRAL_SEQUENCE;
-	else if( option == "--swap" ) algorithm = SWAP;
-	else if( option == "--exhaustive" ) algorithm = EXHAUSTIVE;
-	else if( option == "--retrospective" ) algorithm = RETROSPECTIVE;
+	else if( option == "--compress" ) algorithm = COMPRESS;
         else if( option == "--verbose" ) verbose = true;
         else if( option == "--help" ) print_help_and_exit();
         else print_help_and_exit();
@@ -154,15 +141,17 @@ void compute_pairing( std::string input_filename, std::string output_filename, b
     switch( algorithm ) { \
     case STANDARD: compute_pairing< phat::Representation, phat::standard_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
     case TWIST: compute_pairing< phat::Representation, phat::twist_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
+    case SWAP_TWIST: compute_pairing< phat::Representation, phat::swap_twist_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
     case ROW: compute_pairing< phat::Representation, phat::row_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
+    case MIX_COMPRESS: compute_pairing< phat::Representation, phat::mix_exhaustive_compress_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
     case SPECTRAL_SEQUENCE: compute_pairing< phat::Representation, phat::spectral_sequence_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
+    case EXHAUSTIVE_COMPRESS: compute_pairing< phat::Representation, phat::exhaustive_compress_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
+    case RETROSPECTIVE: compute_pairing< phat::Representation, phat::lazy_retrospective_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
     case CHUNK: compute_pairing< phat::Representation, phat::chunk_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
-    case SWAP: compute_pairing< phat::Representation, phat::swap_twist_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
-    case EXHAUSTIVE: compute_pairing< phat::Representation, phat::exhaustive_compress_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
-    case RETROSPECTIVE: compute_pairing< phat::Representation, phat::lazy_retrospective_reduction> ( input_filename, output_filename, use_binary, verbose, dualize ); break; \
-    case CHUNK_SEQUENTIAL: int num_threads = omp_get_max_threads();	\
+    case COMPRESS: compute_pairing< phat::Representation, phat::compress_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
+    case CHUNK_SEQUENTIAL: int num_threads = omp_get_max_threads(); \
                            omp_set_num_threads( 1 ); \
-                           compute_pairing< phat::Representation, phat::chunk_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); \
+                           compute_pairing< phat::Representation, phat::chunk_reduction >( input_filename, output_filename, use_binary, verbose, dualize ); break; \
                            omp_set_num_threads( num_threads ); \
                            break; \
     }

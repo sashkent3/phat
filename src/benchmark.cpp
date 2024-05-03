@@ -1,34 +1,22 @@
-/*  Copyright 2013 IST Austria
-    Contributed by: Jan Reininghaus
-
-    This file is part of PHAT.
-
-    PHAT is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    PHAT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with PHAT.  If not, see <http://www.gnu.org/licenses/>. */
-
 #include <phat/compute_persistence_pairs.h>
 #include <phat/representations/default_representations.h>
 
 #include <phat/algorithms/twist_reduction.h>
 #include <phat/algorithms/standard_reduction.h>
+#include <phat/algorithms/compress_reduction.h>
 #include <phat/algorithms/row_reduction.h>
 #include <phat/algorithms/chunk_reduction.h>
 #include <phat/algorithms/spectral_sequence_reduction.h>
-#include <phat/algorithms/swap_twist_reduction.h>
+//#include <phat/algorithms/mix_exhaustive_twist_reduction.h>
+#include <phat/algorithms/mix_exhaustive_compress_reduction.h>
 #include <phat/algorithms/exhaustive_compress_reduction.h>
+//#include <phat/algorithms/exhaustive_reduction.h>
+//#include <phat/algorithms/lazy_exhaustive_reduction.h>
+//#include <phat/algorithms/exhaustive_twist_reduction.h>
 #include <phat/algorithms/lazy_retrospective_reduction.h>
+//#include <phat/algorithms/swap_reduction.h>
+#include <phat/algorithms/swap_twist_reduction.h>
 
-    
 #include <phat/helpers/dualize.h>
 
 #include <iostream>
@@ -36,7 +24,7 @@
 
 
 enum Representation_type { VECTOR_VECTOR, VECTOR_HEAP, VECTOR_SET, SPARSE_PIVOT_COLUMN, HEAP_PIVOT_COLUMN, FULL_PIVOT_COLUMN, BIT_TREE_PIVOT_COLUMN, VECTOR_LIST };
-enum Algorithm_type  {STANDARD, TWIST, ROW, CHUNK, CHUNK_SEQUENTIAL, SPECTRAL_SEQUENCE, CHUNK_SQRT, SWAP, EXHAUSTIVE, RETROSPECTIVE};
+enum Algorithm_type  {STANDARD, TWIST, COMPRESS, ROW, CHUNK, CHUNK_SEQUENTIAL, SPECTRAL_SEQUENCE, CHUNK_SQRT, SWAP, SWAP_TWIST, MIX_TWIST, MIX_COMPRESS, LAZY_EXHAUSTIVE, EXHAUSTIVE, EXHAUSTIVE_TWIST,EXHAUSTIVE_COMPRESS, RETROSPECTIVE};
 enum Ansatz_type  {PRIMAL, DUAL};
 
 void print_help() {
@@ -51,7 +39,7 @@ void print_help() {
     std::cerr << "--dual   --  use only dualization approach" << std::endl;
     std::cerr << "--primal   --  use only primal approach" << std::endl;
     std::cerr << "--vector_vector, --vector_heap, --vector_set, --vector_list, --full_pivot_column, --sparse_pivot_column, --heap_pivot_column, --bit_tree_pivot_column  --  use only a subset of representation data structures for boundary matrices" << std::endl;
-    std::cerr << "--standard, --twist, --chunk, --chunk_sequential, --spectral_sequence, --row, --swap, --exhaustive, --retrospective  --  use only a subset of reduction algorithms" << std::endl;
+    std::cerr << "--standard, --twist, --compress, --chunk, --chunk_sequential, --spectral_sequence, --row, --swap_twist, --mix, --exhasutive_compress, --retrospective  --  use only a subset of reduction algorithms" << std::endl;
 }
 
 void print_help_and_exit() {
@@ -81,14 +69,16 @@ void parse_command_line( int argc, char** argv, bool& latex_tables_output, bool&
             else if( argument == "--heap_pivot_column" ) representations.push_back( HEAP_PIVOT_COLUMN );
             else if( argument == "--standard" ) algorithms.push_back( STANDARD );
             else if( argument == "--twist" ) algorithms.push_back( TWIST );
+	    else if( argument == "--compress" ) algorithms.push_back( COMPRESS );
             else if( argument == "--row" ) algorithms.push_back( ROW );
             else if( argument == "--chunk_sequential" ) algorithms.push_back( CHUNK_SEQUENTIAL );
             else if( argument == "--chunk_sqrt" ) algorithms.push_back( CHUNK_SQRT );
             else if( argument == "--spectral_sequence" ) algorithms.push_back( SPECTRAL_SEQUENCE );
             else if( argument == "--chunk" ) algorithms.push_back( CHUNK );
-	    else if( argument == "--swap" ) algorithms.push_back( SWAP );
-	    else if( argument == "--exhaustive" ) algorithms.push_back( EXHAUSTIVE );
-	    else if( argument == "--retrospective" ) algorithms.push_back( RETROSPECTIVE );
+            else if( argument == "--swap_twist" ) algorithms.push_back( SWAP_TWIST );
+	    else if( argument == "--mix" ) algorithms.push_back( MIX_COMPRESS );
+            else if( argument == "--exhaustive_compress" ) algorithms.push_back( EXHAUSTIVE_COMPRESS );
+            else if( argument == "--retrospective" ) algorithms.push_back( RETROSPECTIVE );
             else if( argument == "--primal" ) ansaetze.push_back( PRIMAL );
             else if( argument == "--dual" ) ansaetze.push_back( DUAL );
             else if( argument == "--help" ) print_help_and_exit();
@@ -110,15 +100,11 @@ void parse_command_line( int argc, char** argv, bool& latex_tables_output, bool&
     }
 
     if( algorithms.empty() == true ) {
-        algorithms.push_back( STANDARD );
         algorithms.push_back( TWIST );
-        algorithms.push_back( ROW );
-        algorithms.push_back( CHUNK );
-        algorithms.push_back( SPECTRAL_SEQUENCE );
-	algorithms.push_back( SWAP );
-	algorithms.push_back( EXHAUSTIVE );
-	algorithms.push_back( RETROSPECTIVE );
-       // algorithms.push_back( CHUNK_SEQUENTIAL );
+        algorithms.push_back( SWAP_TWIST );
+        algorithms.push_back( RETROSPECTIVE );
+        algorithms.push_back( EXHAUSTIVE_COMPRESS );
+        algorithms.push_back( MIX_COMPRESS );
     }
     
     if( ansaetze.empty() == true ) {
@@ -185,7 +171,6 @@ void benchmark_latex( std::string input_filename, bool use_binary, Ansatz_type a
         reduction_algorithm( matrix );
     }
 
-    //double running_time = omp_get_wtime() - reduction_timer + dualization_time;
     double running_time = omp_get_wtime( ) - reduction_timer; 
     double running_time_rounded = floor( running_time * 10.0 + 0.5 ) / 10.0;
     std::cout << " && " << std::setiosflags( std::ios::fixed ) << std::setiosflags( std::ios::showpoint ) << std::setprecision( 1 ) << std::setw( 12 ) << running_time_rounded << std::setw( 1 );
@@ -196,14 +181,16 @@ void benchmark_latex( std::string input_filename, bool use_binary, Ansatz_type a
     switch( algorithm ) { \
     case STANDARD: std::cout << " standard,"; benchmark< phat::Representation, phat::standard_reduction >( input_filename, use_binary, ansatz ); break; \
     case TWIST: std::cout << " twist,"; benchmark< phat::Representation, phat::twist_reduction >( input_filename, use_binary, ansatz ); break; \
+    case COMPRESS: std::cout << " compress,"; benchmark< phat::Representation, phat::compress_reduction >( input_filename, use_binary, ansatz ); break; \
     case ROW: std::cout << " row,"; benchmark< phat::Representation, phat::row_reduction >( input_filename, use_binary, ansatz ); break; \
     case CHUNK: std::cout << " chunk,"; benchmark< phat::Representation, phat::chunk_reduction >( input_filename, use_binary, ansatz ); break; \
     case CHUNK_SQRT: std::cout << " chunk_sqrt,"; benchmark< phat::Representation, phat::chunk_reduction_sqrt >( input_filename, use_binary, ansatz ); break; \
     case SPECTRAL_SEQUENCE: std::cout << " spectral sequence,"; benchmark< phat::Representation, phat::spectral_sequence_reduction >( input_filename, use_binary, ansatz ); break; \
-    case SWAP: std::cout << " swap,"; benchmark< phat::Representation, phat::swap_twist_reduction >( input_filename, use_binary, ansatz ); break; \
-    case EXHAUSTIVE: std::cout << " exhaustive,"; benchmark< phat::Representation, phat::exhaustive_compress_reduction >( input_filename, use_binary, ansatz ); break; \
-    case RETROSPECTIVE: std::cout << " retrospective,"; benchmark< phat::Representation, phat::lazy_retrospective_reduction >( input_filename, use_binary, ansatz ); break; \
-    case CHUNK_SEQUENTIAL: std::cout << " chunk_sequential,";	    \
+    case SWAP_TWIST: std::cout << " swap-twist,"; benchmark< phat::Representation, phat::swap_twist_reduction >( input_filename, use_binary, ansatz ); break; \
+    case MIX_COMPRESS: std::cout << " mix-compress,"; benchmark< phat::Representation, phat::mix_exhaustive_compress_reduction >( input_filename, use_binary, ansatz ); break; \
+    case EXHAUSTIVE_COMPRESS: std::cout << " exhaustive-compress,"; benchmark< phat::Representation, phat::exhaustive_compress_reduction >( input_filename, use_binary, ansatz ); break; \
+    case RETROSPECTIVE: std::cout << " lazy-retrospective,"; benchmark< phat::Representation, phat::lazy_retrospective_reduction >( input_filename, use_binary, ansatz ); break; \
+    case CHUNK_SEQUENTIAL: std::cout << " chunk_sequential,"; \
                            int num_threads = omp_get_max_threads(); \
                            omp_set_num_threads( 1 ); \
                            benchmark< phat::Representation, phat::chunk_reduction_sqrt >( input_filename, use_binary, ansatz ); \
@@ -215,14 +202,16 @@ void benchmark_latex( std::string input_filename, bool use_binary, Ansatz_type a
     switch( algorithm ) { \
     case STANDARD: benchmark_latex< phat::Representation, phat::standard_reduction >( input_filename, use_binary, ansatz ); break; \
     case TWIST: benchmark_latex< phat::Representation, phat::twist_reduction >( input_filename, use_binary, ansatz ); break; \
+    case COMPRESS: benchmark_latex< phat::Representation, phat::compress_reduction >( input_filename, use_binary, ansatz ); break; \
     case ROW: benchmark_latex< phat::Representation, phat::row_reduction >( input_filename, use_binary, ansatz ); break; \
     case CHUNK: benchmark_latex< phat::Representation, phat::chunk_reduction >( input_filename, use_binary, ansatz ); break; \
     case CHUNK_SQRT: benchmark_latex< phat::Representation, phat::chunk_reduction_sqrt >( input_filename, use_binary, ansatz ); break; \
     case SPECTRAL_SEQUENCE: benchmark_latex< phat::Representation, phat::spectral_sequence_reduction >( input_filename, use_binary, ansatz ); break; \
-    case SWAP: std::cout << " swap,"; benchmark_latex< phat::Representation, phat::swap_twist_reduction >( input_filename, use_binary, ansatz ); break; \
-    case EXHAUSTIVE: std::cout << " exhaustive,"; benchmark_latex< phat::Representation, phat::exhaustive_compress_reduction >( input_filename, use_binary, ansatz ); break; \
-    case RETROSPECTIVE: std::cout << " retrospective,"; benchmark_latex< phat::Representation, phat::lazy_retrospective_reduction >( input_filename, use_binary, ansatz ); break; \
-    case CHUNK_SEQUENTIAL:  int num_threads = omp_get_max_threads( );	\
+    case SWAP_TWIST: benchmark_latex< phat::Representation, phat::swap_twist_reduction >( input_filename, use_binary, ansatz ); break; \
+    case MIX_COMPRESS: benchmark_latex< phat::Representation, phat::mix_exhaustive_compress_reduction >( input_filename, use_binary, ansatz ); break; \
+    case EXHAUSTIVE_COMPRESS: benchmark_latex< phat::Representation, phat::exhaustive_compress_reduction >( input_filename, use_binary, ansatz ); break; \
+    case RETROSPECTIVE: benchmark_latex< phat::Representation, phat::lazy_retrospective_reduction >( input_filename, use_binary, ansatz ); break; \
+    case CHUNK_SEQUENTIAL:  int num_threads = omp_get_max_threads( ); \
                             omp_set_num_threads( 1 ); \
                             benchmark_latex< phat::Representation, phat::chunk_reduction_sqrt >( input_filename, use_binary, ansatz ); \
                             omp_set_num_threads( num_threads ); \
@@ -305,27 +294,31 @@ int main( int argc, char** argv )
                         switch( algorithm ) {
                         case STANDARD: std::cout << "standard"; break;
                         case TWIST: std::cout << "twist"; break;
+                        case COMPRESS: std::cout << "compress"; break;
                         case ROW: std::cout << "row"; break;
                         case CHUNK: std::cout << "chunk"; break;
                         case SPECTRAL_SEQUENCE: std::cout << "spectral sequence"; break;
+			case SWAP_TWIST: std::cout << "swap-twist"; break;
+			case MIX_COMPRESS: std::cout << "mix_compress"; break;
+			case EXHAUSTIVE_COMPRESS: std::cout << "exhaust-compress"; break;
+			case RETROSPECTIVE: std::cout << "retro"; break;
                         case CHUNK_SEQUENTIAL: std::cout << "chunk-sequential"; break;
                         case CHUNK_SQRT: std::cout << "chunk-sqrt"; break;
-			case SWAP: std::cout << "swap"; break;
-			case EXHAUSTIVE: std::cout << "exhaustive"; break;
-			case RETROSPECTIVE: std::cout << "retrospective"; break;
                         }
                     } else {
                         switch( algorithm ) {
                         case STANDARD: std::cout << "standard$^*$"; break;
                         case TWIST: std::cout << "twist$^*$"; break;
+                        case COMPRESS: std::cout << "compress$^*$"; break;
                         case ROW: std::cout << "row$^*$"; break;
                         case CHUNK: std::cout << "chunk$^*$"; break;
                         case SPECTRAL_SEQUENCE: std::cout << "spectral sequence$^*$"; break;
+			case SWAP_TWIST: std::cout << "swap-twist$^*$"; break;
+			case MIX_COMPRESS: std::cout << "mix-compress$^*$"; break;
+			case EXHAUSTIVE_COMPRESS: std::cout << "exhaust-compress$^*$"; break;
+			case RETROSPECTIVE: std::cout << "retro$^*$"; break;
                         case CHUNK_SEQUENTIAL: std::cout << "chunk-sequential$^*$"; break;
                         case CHUNK_SQRT: std::cout << "chunk-sqrt"; break;
-			case SWAP: std::cout << "swap$^*$"; break;
-			case EXHAUSTIVE: std::cout << "exhaustive$^*$"; break;
-			case RETROSPECTIVE: std::cout << "retrospective$^*$"; break;
                         }
                     }
                     std::cout << std::setw( 1 );

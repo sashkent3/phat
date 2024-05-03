@@ -2,13 +2,18 @@ cmake_minimum_required(VERSION 2.8)
 
 project("Phat")
 
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
-  endif()
+set(CMAKE_BUILD_TYPE "Release")
 
 INCLUDE(CheckCXXSourceCompiles)
 
 include_directories (include)
+
+add_compile_options(-std=c++0x)
+
+if (NOT PRINT_LATEX)
+    set(PRINT_LATEX false)
+endif()
+
 
 FIND_PACKAGE(OpenMP)
 
@@ -40,7 +45,7 @@ To use a different compiler, pass it to cmake in the variable CMAKE_CXX_COMPILER
 
 ")
 endif()
- 
+
 FILE(GLOB_RECURSE all_headers "include/phat/*.h")
 
 FILE(GLOB general_includes "include/phat/*.h")
@@ -54,6 +59,9 @@ add_executable (phat src/phat.cpp ${all_headers})
 add_executable (info src/info.cpp ${all_headers})
 add_executable (benchmark src/benchmark.cpp ${all_headers})
 add_executable (convert src/convert.cpp ${all_headers})
+
+add_executable (phat_with_count_ops src/phat.cpp ${all_headers})
+target_compile_options(phat_with_count_ops PUBLIC -DCOUNT_OPS=true -DPRINT_LATEX=${PRINT_LATEX})
 
 source_group(Header\ Files FILES ${general_includes})
 source_group(Header\ Files\\helpers FILES ${helpers_includes})

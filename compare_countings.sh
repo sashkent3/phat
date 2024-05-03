@@ -11,7 +11,7 @@ echo "INFO Dualize input"
 ./convert --ascii --save-ascii --dualize $1 $1.dual
 echo "INFO Create reference output for dual"
 ./phat ${column_type} --ascii $1.dual ref_dual.out
-for algorithm in --twist --swap_twist --retrospective --exhaustive_compress --mix_compress
+for algorithm in --twist --swap_twist --retrospective --exhaustive_compress --mix
 do
 rm -f bla
 echo INFO Running on $algorithm

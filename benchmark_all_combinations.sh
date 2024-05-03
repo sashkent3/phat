@@ -2,7 +2,7 @@
 
 timeout=600
 
-for algorithm in --twist --swap_twist --mix_compress --exhaustive_compress --retrospective
+for algorithm in --twist --swap_twist --mix --exhaustive_compress --retrospective
 do
 for column_type in --vector_list --vector_vector --vector_set --vector_heap --heap_pivot_column --sparse_pivot_column --full_pivot_column --bit_tree_pivot_column 
 do
