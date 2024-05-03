@@ -1,5 +1,7 @@
 #!/bin/sh
 
+path_to_input_data=../inputs
+
 #remove timeout on bigger inputs to obtain the countings
 timeout=600
 
@@ -8,7 +10,7 @@ timeout=600
 count_col_type=--vector_vector
 
 echo "COUNTING OPERATIONS\n"
-for input in ../inputs/alpha_*_010000_*.phat ../inputs/vr_random_50_16.phat ../inputs/vr_random_100_4.phat ../inputs/vr_senate.phat ../inputs/ls_nucleon_41x41x41_uint8.phat ../inputs/ls_fuel_64x64x64_uint8.phat ../inputs/ls_tooth_103x94x161_uint8.phat ../inputs/shuffled_50_*.phat ../inputs/shuffled_75_*.phat ../inputs/shuffled_100_*.phat
+for input in ${path_to_input_data}/alpha_*_010000_*.phat ${path_to_input_data}/vr_random_50_16.phat ${path_to_input_data}/vr_random_100_4.phat ${path_to_input_data}/vr_senate.phat ${path_to_input_data}/ls_nucleon_41x41x41_uint8.phat ${path_to_input_data}/ls_fuel_64x64x64_uint8.phat ${path_to_input_data}/ls_tooth_103x94x161_uint8.phat ${path_to_input_data}/shuffled_50_*.phat ${path_to_input_data}/shuffled_75_*.phat ${path_to_input_data}/shuffled_100_*.phat
 do
 echo "INFO Create reference output"
 ./phat ${count_col_type} --ascii $input ref.out
@@ -31,7 +33,7 @@ done
 
 #output is the runtime over all data structures of twist, swap, retro, exhaustive, and mix for the inputs
 echo "COMPARING DATASTRUCTURES\n"
-for input in ../inputs/alpha_cube_040000_*.phat ../inputs/vr_celegans.phat ../inputs/ls_tooth_103x94x161_uint8.phat ../inputs/shuffled_75_*.phat
+for input in ${path_to_input_data}/alpha_cube_040000_*.phat ${path_to_input_data}/vr_celegans.phat ${path_to_input_data}/ls_tooth_103x94x161_uint8.phat ${path_to_input_data}/shuffled_75_*.phat
 do
 for algorithm in --twist --swap_twist --mix_compress --exhaustive_compress --retrospective
 do
@@ -49,7 +51,7 @@ done
 
 #output is the runtime over the best combination of data structures with twist, swap, retro, and exhaustive for the inputs
 echo "COMPARING BEST COMBO\n"
-for input in ../inputs/alpha_*_040000_*.phat ../inputs/alpha_*_080000_*.phat ../inputs/alpha_*_160000_*.phat ../inputs/vr_celegans.phat ../inputs/vr_house.phat ../inputs/vr_random_1000_8.phat ../inputs/ls_hydrogen_atom_128x128x128_uint8.phat ../inputs/ls_shockwave_64x64x512_uint8.phat ../inputs/ls_lobster_301x324x56_uint8.phat ../inputs/ls_mri_ventricles_256x256x124_uint8.phat ../inputs/ls_engine_256x256x128_uint8.phat ../inputs/ls_statue_leg_341x341x93_uint8.phat ../inputs/ls_bonsai_256x256x256_uint8.phat ../inputs/ls_skull_256x256x256_uint8.phat ../inputs/shuffled_1*_*.phat
+for input in ${path_to_input_data}/alpha_*_040000_*.phat ${path_to_input_data}/alpha_*_080000_*.phat ${path_to_input_data}/alpha_*_160000_*.phat ${path_to_input_data}/vr_celegans.phat ${path_to_input_data}/vr_house.phat ${path_to_input_data}/vr_random_1000_8.phat ${path_to_input_data}/ls_hydrogen_atom_128x128x128_uint8.phat ${path_to_input_data}/ls_shockwave_64x64x512_uint8.phat ${path_to_input_data}/ls_lobster_301x324x56_uint8.phat ${path_to_input_data}/ls_mri_ventricles_256x256x124_uint8.phat ${path_to_input_data}/ls_engine_256x256x128_uint8.phat ${path_to_input_data}/ls_statue_leg_341x341x93_uint8.phat ${path_to_input_data}/ls_bonsai_256x256x256_uint8.phat ${path_to_input_data}/ls_skull_256x256x256_uint8.phat ${path_to_input_data}/shuffled_1*_*.phat
 do
 for combination in "--twist --bit_tree_pivot_column" "--swap_twist --full_pivot_column" "--exhaustive_compress --vector_vector" "--exhaustive_compress --bit_tree_pivot_column" "--retrospective --vector_vector"
 do
