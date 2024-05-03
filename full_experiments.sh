@@ -18,7 +18,7 @@ echo "INFO Dualize input"
 ./convert --ascii --save-ascii --dualize $input $input.dual
 echo "INFO Create reference output for dual"
 ./phat ${count_col_type} --ascii $input.dual ref_dual.out
-for algorithm in --twist --swap_twist --retrospective --exhaustive_compress --mix_compress
+for algorithm in --twist --swap_twist --retrospective --exhaustive_compress --mix
 do
 rm -f bla
 echo INFO Running on $algorithm
@@ -35,7 +35,7 @@ done
 echo "COMPARING DATASTRUCTURES\n"
 for input in ${path_to_input_data}/alpha_cube_040000_*.phat ${path_to_input_data}/vr_celegans.phat ${path_to_input_data}/ls_tooth_103x94x161_uint8.phat ${path_to_input_data}/shuffled_75_*.phat
 do
-for algorithm in --twist --swap_twist --mix_compress --exhaustive_compress --retrospective
+for algorithm in --twist --swap_twist --mix --exhaustive_compress --retrospective
 do
 for column_type in --vector_list --vector_vector --vector_set --vector_heap --heap_pivot_column --sparse_pivot_column --full_pivot_column --bit_tree_pivot_column
 do
