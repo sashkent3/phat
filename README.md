@@ -9,6 +9,26 @@ Ulrich Bauer, Michael Kerber, Jan Reininghaus
 
 Hubert Wagner, Bryn Keller, Barbara Giunti, Guillaume Houry, Abhishek Rathod, Talha Bin Masood
 
+## This Branch ##
+
+This branch contains an extension of the standard phat library (description
+see below) needed for the experiments of the paper [Keeping it sparse – Computing Persistent Homology revisited](https://arxiv.org/abs/2211.09075) (see `[6]`). The additional contents beyond standard phat 1.7 are
+* another reduction strategy (include/phat/algorithms/mix_exhaustive_compress_reduction.h) that is tested in the paper
+* several further reduction strategies (include/phat/algorithms/further_reductions) that have been tried out but not included in the paper for brevity
+* several of the reduction strategies have counters included to measure the
+number of column and bit operations during the reduction. This feature can be
+enabled and disabled using the compiler flag COUNT_OPS
+* script to run the benchmarks. The script "full_experiments.sh" performs all
+experiments presented in the paper. It runs the subscripts "compare_countings.sh", "benchmark_all_combinations.sh" and "benchmark_best_combinations.sh" which run the tests described in the Sections 4.2, 4.3, 4.4 of the paper, respectively.
+
+In order to run the script "full_experiments.sh", it is required to download
+the datasets from the repository:
+
+<LINK_TO_REPOSITORY>
+
+and to adapt the path the the folder that contains all instance at the beginning
+of the script.
+
 ## Downloads ##
 * [PHAT, v1.7](https://bitbucket.org/phat-code/phat/get/v1.7.zip)
 * [PHAT, v1.6](https://bitbucket.org/phat-code/phat/get/v1.6.zip)
