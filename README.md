@@ -13,6 +13,7 @@ Hubert Wagner, Bryn Keller, Barbara Giunti, Guillaume Houry, Abhishek Rathod, Ta
 
 This branch contains an extension of the standard phat library (description
 see below) needed for the experiments of the paper [Keeping it sparse – Computing Persistent Homology revisited](https://arxiv.org/abs/2211.09075) (see `[6]`). The additional contents beyond standard phat 1.7 are
+
 * another reduction strategy (include/phat/algorithms/mix_exhaustive_compress_reduction.h) that is tested in the paper
 * several further reduction strategies (include/phat/algorithms/further_reductions) that have been tried out but not included in the paper for brevity
 * several of the reduction strategies have counters included to measure the
