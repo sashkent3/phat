@@ -9,7 +9,7 @@ Ulrich Bauer, Michael Kerber, Jan Reininghaus
 
 Hubert Wagner, Bryn Keller, Barbara Giunti, Guillaume Houry, Abhishek Rathod, Talha Bin Masood
 
-## This Branch ##
+## On this branch ##
 
 This branch contains an extension of the standard phat library (description
 see below) needed for the experiments of the paper [Keeping it sparse – Computing Persistent Homology revisited](https://arxiv.org/abs/2211.09075) (see `[6]`). The additional contents beyond standard phat 1.7 are
