@@ -16,8 +16,7 @@ Hubert Wagner, Bryn Keller, Barbara Giunti, Guillaume Houry, Abhishek Rathod, Ta
 * [PHAT, v1.4.1](https://bitbucket.org/phat-code/phat/get/v1.4.1.zip)
 * [PHAT, v1.3](https://drive.google.com/uc?id=0B7Yz6TPEpiGEMGFNQ3FPX3ltelk&export=download)
 * [PHAT, v1.2.1](https://drive.google.com/uc?id=0B7Yz6TPEpiGENE9KUnhUSFdFQUk&export=download)
-* [benchmark data](https://drive.google.com/uc?id=0B7Yz6TPEpiGERGZFbjlXaUt1ZWM&export=download)
-* [benchmark data 2](https://drive.google.com/uc?id=0B7Yz6TPEpiGEWE55X3RuM3JjZ3M&export=download)
+* [benchmark data](https://doi.org/10.3217/hht7z-8ek20)
 
 ## Description ##
 
@@ -99,7 +98,7 @@ pairs.get_num_pairs()
 pairs.get_pair(...)
 ` 
  	
-A simple example that demonstrates this functionality can be found in `src/simple_example.cpp`
+A simple example that demonstrates this functionality can be found in `src/simple_example.cpp`. A collection of benchmark files of various forms can be downloaded from `[7]`
 
 ## File Formats ##
 
@@ -151,3 +150,4 @@ the Python-specific README.rst in the `python` folder of this repository for det
 4. U.Bauer, M.Kerber, J.Reininghaus: Clear and Compress: Computing Persistent Homology in Chunks. Topological Methods in Data Analysis and Visualization III. Available at [arXiv:1303.0477](https://arxiv.org/abs/1303.0477)
 5. U.Bauer, M.Kerber, J.Reininghaus, H.Wagner: Phat – Persistent Homology Algorithms Toolbox. Journal of Symbolic Computation 78, 2017, p. 76–90.
 6. U.Bauer, T.Bin Masood, B.Giunti, G.Houry, M.Kerber, A.Rathod: Keeping it sparse – Computing Persistent Homology revisited. [arXiv:2211.09075](https://arxiv.org/abs/2211.09075)
+7. T.Bin Masood, B.Giunti, M.Kerber: Benchmark datasets for Keeping it sparse: Computing Persistent Homology revisited [Data set]. Graz University of Technology. [https://doi.org/10.3217/hht7z-8ek20](https://doi.org/10.3217/hht7z-8ek20)
