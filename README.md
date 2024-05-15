@@ -23,11 +23,7 @@ enabled and disabled using the compiler flag COUNT_OPS
 experiments presented in the paper. It runs the subscripts "compare_countings.sh", "benchmark_all_combinations.sh" and "benchmark_best_combinations.sh" which run the tests described in the Sections 4.2, 4.3, 4.4 of the paper, respectively.
 
 In order to run the script "full_experiments.sh", it is required to download
-the datasets from the repository:
-
-<LINK_TO_REPOSITORY>
-
-and to adapt the path the the folder that contains all instance at the beginning
+the datasets from the repository `[7]` and to adapt the path the the folder that contains all instance at the beginning
 of the script.
 
 ## Downloads ##
@@ -172,3 +168,4 @@ the Python-specific README.rst in the `python` folder of this repository for det
 4. U.Bauer, M.Kerber, J.Reininghaus: Clear and Compress: Computing Persistent Homology in Chunks. Topological Methods in Data Analysis and Visualization III. Available at [arXiv:1303.0477](https://arxiv.org/abs/1303.0477)
 5. U.Bauer, M.Kerber, J.Reininghaus, H.Wagner: Phat – Persistent Homology Algorithms Toolbox. Journal of Symbolic Computation 78, 2017, p. 76–90.
 6. U.Bauer, T.Bin Masood, B.Giunti, G.Houry, M.Kerber, A.Rathod: Keeping it sparse – Computing Persistent Homology revisited. [arXiv:2211.09075](https://arxiv.org/abs/2211.09075)
+7. T.Bin Masood, B.Giunti, M.Kerber: Benchmark datasets for Keeping it sparse: Computing Persistent Homology revisited [Data set]. Graz University of Technology. [https://doi.org/10.3217/hht7z-8ek20](https://doi.org/10.3217/hht7z-8ek20)
