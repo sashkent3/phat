@@ -31,7 +31,7 @@ namespace phat {
         reduce( boundary_matrix );
         pairs.clear();
         index ncols = boundary_matrix.get_num_cols();
-        std::vector<index> lows(ncols);
+        std::vector<index> lows(ncols, -1);
         for( index idx = 0; idx < ncols; idx++ ) {
             index low = boundary_matrix.get_max_index(idx);
             if (low > -1) {
