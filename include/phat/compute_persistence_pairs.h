@@ -31,10 +31,14 @@ namespace phat {
         reduce( boundary_matrix );
         pairs.clear();
         index ncols = boundary_matrix.get_num_cols();
-        std::vector<index> lows(ncols, -1);
+        std::vector<index> lows(ncols);
         for( index idx = 0; idx < ncols; idx++ ) {
             index low = boundary_matrix.get_max_index(idx);
-            lows[low] = idx;
+            if (low > -1) {
+                lows[low] = idx;
+            }
+        }
+        for( index idx = 0; idx < ncols; idx++ ) {
             if( boundary_matrix.is_empty( idx ) ) {
                 pairs.append_pair(idx, lows[idx]);
             }
