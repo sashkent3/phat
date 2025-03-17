@@ -30,11 +30,13 @@ namespace phat {
         ReductionAlgorithm reduce;
         reduce( boundary_matrix );
         pairs.clear();
-        for( index idx = 0; idx < boundary_matrix.get_num_cols(); idx++ ) {
-            if( !boundary_matrix.is_empty( idx ) ) {
-                index birth = boundary_matrix.get_max_index( idx );
-                index death = idx;
-                pairs.append_pair( birth, death );
+        index ncols = boundary_matrix.get_num_cols();
+        std::vector<index> lows(ncols, -1);
+        for( index idx = 0; idx < ; idx++ ) {
+            index low = boundary_matrix.get_max_index(idx);
+            lows[low] = idx;
+            if( boundary_matrix.is_empty( idx ) ) {
+                pairs.append_pair(idx, lows[idx])
             }
         }
     }
