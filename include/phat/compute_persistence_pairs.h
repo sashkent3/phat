@@ -36,7 +36,7 @@ namespace phat {
             index low = boundary_matrix.get_max_index(idx);
             lows[low] = idx;
             if( boundary_matrix.is_empty( idx ) ) {
-                pairs.append_pair(idx, lows[idx])
+                pairs.append_pair(idx, lows[idx]);
             }
         }
     }
