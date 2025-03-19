@@ -51,8 +51,6 @@ setup(
     keywords='algebraic-topology PHAT distributed topology persistent-homology',
     long_description=long_description,
     ext_modules=ext_modules,
-    requires=requires,
-    install_requires=requires,
     cmdclass={'build_ext': BuildExt},
     package_dir={'':'python'},
     py_modules = ['phat'],
