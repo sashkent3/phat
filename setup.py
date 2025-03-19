@@ -44,8 +44,6 @@ class BuildExt(build_ext):
             ext.include_dirs.append(pybind11.get_include(user=True))
         build_ext.build_extensions(self)
 
-requires = ['setuptools', 'pybind11']
-
 if sys.version_info < (3,4,0):
     requires.append('enum34')
 
