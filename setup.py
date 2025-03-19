@@ -4,10 +4,6 @@ import sys
 import os.path
 from io import open
 
-if sys.version_info < (2, 7, 12):
-    print("Sorry, PHAT requires Python 2.7.12 or later")
-    sys.exit(1)
-
 
 ext_modules = [
     Extension(
@@ -44,9 +40,6 @@ class BuildExt(build_ext):
             ext.include_dirs.append(pybind11.get_include(user=True))
         build_ext.build_extensions(self)
 
-if sys.version_info < (3,4,0):
-    requires.append('enum34')
-
 setup(
     name='phat',
     version='1.6.0.post2',
@@ -63,6 +56,7 @@ setup(
     cmdclass={'build_ext': BuildExt},
     package_dir={'':'python'},
     py_modules = ['phat'],
+    python_requires=">=3.9"
     # packages = find_packages(exclude = ['doc', 'test'])
  )
 
